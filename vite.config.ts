@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string }
 
@@ -30,7 +31,39 @@ function version(): string {
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [
+    vue(),
+    tailwindcss(),
+    // Installable and offline: a service worker precaches the whole app. New versions wait
+    // until the user selects Update, so a refresh never loses what they're editing.
+    VitePWA({
+      registerType: 'prompt',
+      // The workbox glob below already precaches every icon.
+      includeManifestIcons: false,
+      manifest: {
+        id: '/',
+        name: 'Mob forge',
+        short_name: 'Mob forge',
+        description: 'Roll mobs and bosses for the Dungeon Crawler Carl RPG and export them to Obsidian or Crawler Forge.',
+        theme_color: '#0c0a09',
+        background_color: '#0c0a09',
+        display: 'standalone',
+        start_url: '/',
+        scope: '/',
+        categories: ['games', 'utilities'],
+        icons: [
+          { src: 'pwa-64x64.png', sizes: '64x64', type: 'image/png' },
+          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+          { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+        cleanupOutdatedCaches: true,
+      },
+    }),
+  ],
   define: {
     __APP_VERSION__: JSON.stringify(version()),
     __APP_COMMIT__: JSON.stringify(commit()),

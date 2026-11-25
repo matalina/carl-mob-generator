@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import AppUpdate from './components/AppUpdate.vue';
 import AttacksEditor from './components/AttacksEditor.vue';
+import InstallButton from './components/InstallButton.vue';
 import ForgeForm from './components/ForgeForm.vue';
 import LibraryPanel from './components/LibraryPanel.vue';
 import MobCard from './components/MobCard.vue';
@@ -88,6 +90,7 @@ async function copyJson() {
 				</h1>
 				<p class="text-sm text-stone-400">Roll mobs and bosses for the Dungeon Crawler Carl RPG.</p>
 			</div>
+			<InstallButton />
 		</header>
 
 		<main class="grid gap-5 lg:grid-cols-[20rem_minmax(0,1fr)_19rem]">
@@ -123,5 +126,6 @@ async function copyJson() {
 				· built {{ built }}
 			</p>
 		</footer>
+		<AppUpdate />
 	</div>
 </template>

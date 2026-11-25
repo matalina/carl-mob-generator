@@ -7,6 +7,18 @@ Roll mobs and bosses for the Dungeon Crawler Carl RPG in the browser, keep them 
 
 The generator is ported from the plugin's mob forge (`src/forge/`), built on the Core Rulebook's "Create Your Own Mobs and Bosses" (pp. 270–273, Tables 50 and 51).
 
+## Install and offline
+
+Mob forge is a progressive web app. After the first visit it works with no connection; your library is already stored on the device.
+
+- **Chrome, Edge, Android:** select **Install app** in the header (or the install icon in the address bar).
+- **iPhone and iPad:** Safari → **Share** → **Add to Home Screen**.
+- **Mac Safari:** **File** → **Add to Dock**.
+
+When a new version is deployed, the app shows **A new version of Mob forge is ready** with an **Update** button. It never reloads by itself, so nothing you're editing is lost. Open tabs check for updates every hour.
+
+Icons are generated from `public/favicon.svg` with `npm run icons` (config in `pwa-assets.config.ts`).
+
 ## Privacy
 
 Everything runs in your browser. Saved mobs and export settings live in `localStorage` on your device; nothing is sent anywhere. Clearing site data deletes the library.
