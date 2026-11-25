@@ -17,6 +17,8 @@ export interface SavedMob {
 	traits: Trait[];
 	createdAt: string;
 	updatedAt: string;
+	/** When it was last downloaded as a note or in a pack. */
+	exportedAt?: string;
 }
 
 export const displayName = (m: Pick<SavedMob, 'name'>) => m.name.trim() || 'Unnamed mob';

@@ -59,14 +59,14 @@ function open(mob: SavedMob) {
 	draft.value = JSON.parse(JSON.stringify(mob));
 }
 
-function onRemoved(id: string) {
-	if (draft.value.id === id) startNew();
+function onRemoved(ids: string[]) {
+	if (ids.includes(draft.value.id)) startNew();
 }
 
 const dirty = computed(() => {
 	if (!saved.value) return true;
-	const { updatedAt: _a, ...a } = saved.value;
-	const { updatedAt: _b, ...b } = draft.value;
+	const { updatedAt: _a, exportedAt: _c, ...a } = saved.value;
+	const { updatedAt: _b, exportedAt: _d, ...b } = draft.value;
 	return JSON.stringify(a) !== JSON.stringify(b);
 });
 

@@ -3,6 +3,7 @@ import Ajv2020 from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { describe, expect, it } from 'vitest';
 import { crawlerForgePack } from '../src/lib/crawlerforge';
+import { slugify } from '../src/lib/download';
 import { forgeMob, type ForgeOptions } from '../src/lib/generate';
 import { mobNote } from '../src/lib/markdown';
 import { RANKS, ROLES, type Role } from '../src/lib/tables';
@@ -79,6 +80,14 @@ describe('Crawler Forge pack', () => {
 		const out = crawlerForgePack([m], { author: 'GM' }).mobs[0]!;
 		expect(out).toMatchObject({ id: 'mob-test-1', kind: 'boss', bossTier: 'city', homeFloor: 3 });
 		expect(out.attacks[0]!.id).toBe('mob-test-1-attack-1');
+	});
+});
+
+describe('pack file name', () => {
+	it('slugifies the pack name', () => {
+		expect(slugify('Floor 3: Gutter Kings & Co.')).toBe('floor-3-gutter-kings-co');
+		expect(slugify('  Crème brûlée  ')).toBe('creme-brulee');
+		expect(slugify('!!!')).toBe('');
 	});
 });
 

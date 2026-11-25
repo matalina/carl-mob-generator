@@ -29,9 +29,20 @@ export function downloadNotes(mobs: SavedMob[]) {
 	saveBlob(new Blob([zipSync(files)], { type: 'application/zip' }), 'mobs.zip');
 }
 
+/** "Gutter Kings & Co." → "gutter-kings-co" */
+export function slugify(text: string): string {
+	return text
+		.normalize('NFKD')
+		.replace(/[̀-ͯ]/g, '')
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, '-')
+		.replace(/^-+|-+$/g, '');
+}
+
 export function downloadPack(mobs: SavedMob[], opts: PackOptions) {
-	const json = JSON.stringify(crawlerForgePack(mobs, opts), null, 2);
-	saveBlob(new Blob([json], { type: 'application/json' }), 'mob-forge-pack.json');
+	const pack = crawlerForgePack(mobs, opts);
+	const json = JSON.stringify(pack, null, 2);
+	saveBlob(new Blob([json], { type: 'application/json' }), `${slugify(pack.name) || 'mob-forge-pack'}.json`);
 }
 
 export async function copyText(text: string): Promise<boolean> {

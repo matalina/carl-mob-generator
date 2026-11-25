@@ -36,12 +36,36 @@ watch(settings, (v) => persist(SETTINGS_KEY, v), { deep: true });
 export function saveMob(mob: SavedMob) {
 	const copy: SavedMob = JSON.parse(JSON.stringify(mob));
 	const i = mobs.value.findIndex((m) => m.id === copy.id);
+	// The library's own record of the last export wins over the editor's copy.
+	if (i !== -1) copy.exportedAt = mobs.value[i]!.exportedAt;
 	if (i === -1) mobs.value.unshift(copy);
 	else mobs.value.splice(i, 1, copy);
 }
 
 export function removeMob(id: string) {
 	mobs.value = mobs.value.filter((m) => m.id !== id);
+}
+
+/** Exported, and not changed since. */
+export const isExported = (m: SavedMob) => !!m.exportedAt && m.exportedAt >= m.updatedAt;
+
+export function markExported(ids: string[]) {
+	const now = new Date().toISOString();
+	const set = new Set(ids);
+	for (const m of mobs.value) if (set.has(m.id)) m.exportedAt = now;
+}
+
+/** Removes every mob that has been exported and not changed since; returns their ids. */
+export function removeExported(): string[] {
+	const gone = mobs.value.filter(isExported).map((m) => m.id);
+	mobs.value = mobs.value.filter((m) => !isExported(m));
+	return gone;
+}
+
+export function removeAll(): string[] {
+	const gone = mobs.value.map((m) => m.id);
+	mobs.value = [];
+	return gone;
 }
 
 // Keep other tabs in step.

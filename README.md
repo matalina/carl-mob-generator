@@ -19,6 +19,12 @@ When a new version is deployed, the app shows **A new version of Mob forge is re
 
 Icons are generated from `public/favicon.svg` with `npm run icons` (config in `pwa-assets.config.ts`).
 
+## Library and exports
+
+Downloading a mob as a note or in a pack marks it **Exported** (editing it afterwards clears the mark). **Select not exported** picks the mobs that aren't in any download yet. Under **Clean up**, **Clear exported** deletes only exported mobs and **Clear all** empties the library; both ask first, and nothing is ever cleared automatically.
+
+Pack files are named after the pack name, slugified: "Floor 3: Gutter Kings" downloads as `floor-3-gutter-kings.json`.
+
 ## Privacy
 
 Everything runs in your browser. Saved mobs and export settings live in `localStorage` on your device; nothing is sent anywhere. Clearing site data deletes the library.
