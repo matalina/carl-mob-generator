@@ -63,3 +63,11 @@ Surprise, Evade, Health slots and to-hit are left for Crawler Forge to work out;
 ## Deploy
 
 `netlify.toml` builds with `npm run build` and publishes `dist/`. Connect the repo in Netlify and it deploys on every push to `main`.
+
+## Versioning
+
+The app shows its version next to the title, and the version, commit and build date in the footer.
+
+The version changes on every push by itself: the first two numbers come from `package.json` and the last is the number of commits on `main`. With `0.2.0` in `package.json` and 15 commits, the app shows `0.2.15`; the next push shows `0.2.16`. Netlify's build command fetches the full git history so the count is right.
+
+For a bigger jump, edit the first two numbers in `package.json` (`0.3.0`, `1.0.0`); the last number in `package.json` is ignored.

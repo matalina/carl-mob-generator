@@ -11,6 +11,10 @@ import { mobs, saveMob, settings } from './lib/library';
 import { mobNote } from './lib/markdown';
 import { displayName, newId, type SavedMob } from './lib/types';
 
+const version = __APP_VERSION__;
+const commit = __APP_COMMIT__;
+const built = new Date(__BUILD_DATE__).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+
 const DEFAULTS: ForgeOptions = { floor: 3, level: 14, rank: 'Mob', size: 4, creature: 'Humanoid', role: 'brute', armor: null };
 
 function blank(opts: ForgeOptions = DEFAULTS): SavedMob {
@@ -80,6 +84,7 @@ async function copyJson() {
 			<div>
 				<h1 class="font-display text-3xl font-semibold tracking-wide text-stone-50">
 					Mob <span class="text-amber-400">forge</span>
+					<span class="ml-1 align-middle rounded-full border border-stone-700 px-2 py-0.5 font-sans text-xs font-medium tracking-normal text-stone-400">v{{ version }}</span>
 				</h1>
 				<p class="text-sm text-stone-400">Roll mobs and bosses for the Dungeon Crawler Carl RPG.</p>
 			</div>
@@ -111,6 +116,12 @@ async function copyJson() {
 
 		<footer class="mt-10 text-center text-xs text-stone-500">
 			Built from the Core Rulebook's "Create Your Own Mobs and Bosses" (Tables 50 and 51). Your mobs are stored in this browser only.
+			<p class="mt-1">
+				Version {{ version }}<template v-if="commit">
+					·
+					<a :href="`https://github.com/matalina/carl-mob-generator/commit/${commit}`" class="underline decoration-stone-700 hover:text-stone-300" target="_blank" rel="noopener">{{ commit }}</a></template>
+				· built {{ built }}
+			</p>
 		</footer>
 	</div>
 </template>

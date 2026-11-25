@@ -1,5 +1,6 @@
 [build]
-  command = "npm run build"
+  # The app's version counts commits, so fetch the full history if Netlify cloned a shallow copy.
+  command = "git fetch --unshallow --quiet || true; npm run build"
   publish = "dist"
 
 [build.environment]
