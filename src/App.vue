@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import AttacksEditor from './components/AttacksEditor.vue';
 import ForgeForm from './components/ForgeForm.vue';
 import LibraryPanel from './components/LibraryPanel.vue';
 import MobCard from './components/MobCard.vue';
@@ -102,6 +103,7 @@ async function copyJson() {
 					{{ status || (saved && dirty ? 'Unsaved changes.' : '') }}
 				</p>
 				<MobCard :entry="draft" />
+				<AttacksEditor v-model="draft" />
 			</div>
 
 			<LibraryPanel :active-id="saved?.id ?? null" @open="open" @removed="onRemoved" />

@@ -43,6 +43,31 @@ describe('Crawler Forge pack', () => {
 		expect(ok ? [] : validate.errors?.slice(0, 5)).toEqual([]);
 	});
 
+	it('stays valid after hand edits to attacks', () => {
+		const m = saved({}, 9);
+		const [a] = m.mob.attacks;
+		Object.assign(a!, {
+			name: '  ',
+			diceCount: 99,
+			die: 'd20',
+			damageType: 'Holy',
+			rangeFt: -10,
+			area: { field: 'radius', feet: 7 },
+			splash: true,
+			debuff: { name: '   ', on: 'hit' },
+			notes: 'x'.repeat(500),
+		});
+		m.mob.attacks.push({ ...a!, name: 'Gaze: of doom', area: null, debuff: { name: 'Charmed', on: 'majorFail' }, notes: '' });
+		const pack = crawlerForgePack([m], { author: 'GM' });
+		expect(validate(pack) ? [] : validate.errors?.slice(0, 5)).toEqual([]);
+		const attacks = pack.mobs[0]!.attacks;
+		const [first, second] = [attacks[0], attacks.at(-1)];
+		expect(first).toMatchObject({ name: 'Attack', diceCount: 30, damageType: 'holy', area: { shape: 'blast', feet: 5, splashFeet: 5 } });
+		expect(first).not.toHaveProperty('onHit');
+		expect(second).toMatchObject({ onFail: ['Charmed'] });
+		expect(mobNote(m)).toContain('  - "Gaze: of doom":');
+	});
+
 	it('rejects a pack the schema does not allow', () => {
 		const pack = crawlerForgePack([saved({}, 0)], { author: '' });
 		(pack.mobs[0]!.attacks[0] as { damageType: string }).damageType = 'Bludgeoning';

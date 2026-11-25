@@ -43,6 +43,11 @@ const traits = computed(() => props.entry.traits.filter((t) => t.name.trim()));
 		</header>
 
 		<div class="space-y-4 p-4">
+			<aside v-if="entry.description.trim()" class="rounded-lg border-l-4 border-red-600 bg-red-950/40 px-3 py-2 text-sm">
+				<p class="mb-1 font-semibold text-red-300">{{ displayName(entry) }}, Level {{ mob.level }}</p>
+				<p class="whitespace-pre-line text-stone-200">{{ entry.description }}</p>
+			</aside>
+
 			<div class="flex flex-wrap gap-1" :aria-label="`${mob.hpSlots} health slots of ${conMod}`">
 				<div v-for="i in mob.hpSlots" :key="i" class="flex w-9 flex-col items-center gap-0.5">
 					<div class="w-full rounded-sm py-0.5 text-center text-xs font-semibold text-white" :style="slotStyle(i - 1, mob.hpSlots)">
@@ -67,9 +72,9 @@ const traits = computed(() => props.entry.traits.filter((t) => t.name.trim()));
 			</dl>
 
 			<section class="space-y-2">
-				<div v-for="a in mob.attacks" :key="a.name" class="rounded-lg bg-stone-800/60 px-3 py-2 text-sm">
+				<div v-for="(a, i) in mob.attacks" :key="i" class="rounded-lg bg-stone-800/60 px-3 py-2 text-sm">
 					<p>
-						<strong class="text-amber-300">{{ a.name }}:</strong> {{ attackLine(a) }}
+						<strong class="text-amber-300">{{ a.name || 'Attack' }}:</strong> {{ attackLine(a) }}
 					</p>
 					<p v-if="effectText(a)" class="mt-0.5 text-stone-400 italic">{{ effectText(a) }}</p>
 				</div>
@@ -82,9 +87,6 @@ const traits = computed(() => props.entry.traits.filter((t) => t.name.trim()));
 				</p>
 			</section>
 
-			<blockquote v-if="entry.description.trim()" class="border-l-2 border-red-700 pl-3 text-sm whitespace-pre-line text-stone-300 italic">
-				{{ entry.description }}
-			</blockquote>
 		</div>
 	</article>
 </template>

@@ -25,26 +25,33 @@ export interface PackOptions {
 	license?: 'private' | 'CC-BY-SA-4.0';
 }
 
+const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, Math.round(Number(n) || 0)));
+/** Area sizes are whole multiples of 5ft, 5–1000. */
+const areaFeet = (n: number) => clamp(Math.round((Number(n) || 0) / 5) * 5, 5, 1000);
+
 function attack(a: ForgedAttack, id: string) {
 	const area = a.area
-		? { shape: AREA_SHAPES[a.area.field], feet: a.area.feet, ...(a.splash ? { splashFeet: 5 } : {}) }
+		? { shape: AREA_SHAPES[a.area.field], feet: areaFeet(a.area.feet), ...(a.splash ? { splashFeet: 5 } : {}) }
 		: undefined;
-	const range = a.kind === 'melee' ? (a.rangeFt <= 5 ? 'melee' : `reach ${a.rangeFt} ft`) : `${a.rangeFt} ft`;
-	const notes = [a.armorPiercing ? 'Armor-Piercing.' : '', !a.area && a.splash ? '+5ft Splash.' : '']
+	const ft = clamp(a.rangeFt, 0, 9999);
+	const range = a.kind === 'melee' ? (ft <= 5 ? 'melee' : `reach ${ft} ft`) : `${ft} ft`;
+	const notes = [a.armorPiercing ? 'Armor-Piercing.' : '', !a.area && a.splash ? '+5ft Splash.' : '', a.notes?.trim() ?? '']
 		.filter(Boolean)
-		.join(' ');
+		.join(' ')
+		.slice(0, 400);
+	const debuff = a.debuff?.name.trim().slice(0, 80);
 
 	return {
 		id,
-		name: a.name,
+		name: a.name.trim() || 'Attack',
 		stat: STAT_IDS[a.stat],
-		diceCount: a.diceCount,
+		diceCount: clamp(a.diceCount, 1, 30),
 		die: a.die,
 		damageType: a.damageType.toLowerCase(),
 		range,
 		...(area ? { area } : {}),
-		...(a.debuff?.on === 'majorFail' ? { onFail: [a.debuff.name] } : {}),
-		...(a.debuff?.on === 'hit' ? { onHit: { debuff: a.debuff.name } } : {}),
+		...(debuff && a.debuff?.on === 'majorFail' ? { onFail: [debuff] } : {}),
+		...(debuff && a.debuff?.on === 'hit' ? { onHit: { debuff } } : {}),
 		notes,
 		...(a.kind === 'spell' ? { spell: true as const } : {}),
 	};

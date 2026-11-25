@@ -45,6 +45,34 @@ export interface ForgedAttack {
 	splash: boolean;
 	armorPiercing: boolean;
 	debuff: { name: string; on: 'hit' | 'majorFail' } | null;
+	/** Anything else about the attack, typed by hand. */
+	notes?: string;
+}
+
+/** Damage types Crawler Forge knows; an attack's damage type is one of these. */
+export const DAMAGE_TYPE_NAMES = [
+	'Acid', 'Bludgeoning', 'Electric', 'Fire', 'Force', 'Holy', 'Ice',
+	'Necrotic', 'Piercing', 'Poison', 'Psychic', 'Slashing', 'Sonic',
+];
+export const DIE_NAMES = ['d4', 'd6', 'd8', 'd10', 'd12', 'd20'];
+
+/** A plain attack to start from when adding one by hand. */
+export function blankAttack(mob: ForgedMob): ForgedAttack {
+	return {
+		name: 'New attack',
+		kind: 'melee',
+		stat: 'strength',
+		mod: statMod(mob.stats.strength),
+		diceCount: diceForLevel(mob.level),
+		die: 'd6',
+		damageType: 'Bludgeoning',
+		rangeFt: 5,
+		area: null,
+		splash: false,
+		armorPiercing: false,
+		debuff: null,
+		notes: '',
+	};
 }
 
 export interface ForgedMob {
@@ -202,12 +230,13 @@ export function effectText(a: ForgedAttack): string {
 	const notes: string[] = [];
 	if (a.splash) notes.push('+5ft Splash.');
 	if (a.armorPiercing) notes.push('Armor-Piercing.');
-	if (a.debuff) {
+	if (a.debuff?.name.trim()) {
 		notes.push(
 			a.debuff.on === 'hit'
 				? `Any hit crawler gains the ${a.debuff.name} Debuff.`
 				: `On an Evade Major Fail or worse, the crawler gains the ${a.debuff.name} Debuff.`,
 		);
 	}
+	if (a.notes?.trim()) notes.push(a.notes.trim());
 	return notes.join(' ');
 }

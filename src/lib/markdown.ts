@@ -26,7 +26,7 @@ export function mobFrontmatter(saved: SavedMob, tag = 'carl/creature'): string {
 	const attacks = mob.attacks.flatMap((a) => {
 		const ind = '      ';
 		return [
-			`  - ${a.name}:`,
+			`  - ${scalar(a.name.trim() || 'Attack')}:`,
 			line('to-hit', toHitText(a), ind),
 			line('damage', damageText(a), ind),
 			line('range', `${a.rangeFt}ft`, ind),

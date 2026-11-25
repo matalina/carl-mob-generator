@@ -101,8 +101,8 @@ async function addTrait() {
 		</div>
 
 		<label class="field">
-			<span>Description</span>
-			<textarea v-model="entry.description" rows="3" class="input" placeholder="How the AI announces it" />
+			<span>AI description</span>
+			<textarea v-model="entry.description" rows="4" class="input" placeholder="How the AI announces it, in its own snarky words." />
 		</label>
 
 		<div class="space-y-2">

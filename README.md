@@ -55,7 +55,8 @@ When Crawler Forge bumps its schema version, download the new `pack.schema.json`
 | Debuff on any hit | `onHit` |
 | Debuff on Evade Major Fail | `onFail` |
 | Traits | `abilities` |
-| Description | `description` |
+| AI description | `description` (and the note's `[!danger]` callout) |
+| Attack notes | attack `notes` |
 
 Surprise, Evade, Health slots and to-hit are left for Crawler Forge to work out; they follow the same rules the forge uses. Each mob keeps its id, so importing it again is recognized as the same piece.
 
